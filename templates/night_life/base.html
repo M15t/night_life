@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <title>Rảnh coi chơi - {% block title %}{% endblock %}</title>
+
+    <meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+	<!-- Global stylesheets -->
+	<link href="https://fonts.googleapis.com/css?family=Inconsolata:400,700&amp;subset=vietnamese" rel="stylesheet">
+	<link href="{% static 'css/icons/icomoon/styles.css' %}" rel="stylesheet" type="text/css">
+	<link href="{% static 'css/bootstrap.css' %}" rel="stylesheet type="text/css">
+	<link href="{% static 'css/core.css' %}" rel="stylesheet" type="text/css">
+	<link href="{% static 'css/components.css' %}" rel="stylesheet" type="text/css">
+	<link href="{% static 'css/colors.css' %}" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="https://cdn.plyr.io/3.3.7/plyr.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css" />
+    <link href="{% static 'css/nl.css' %}" rel="stylesheet" type="text/css">
+	<!-- /global stylesheets -->
+
+	<!-- Core JS files -->
+    <script type="text/javascript" src="{% static 'js/plugins/loaders/pace.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/core/libraries/jquery.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/core/libraries/bootstrap.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/plugins/loaders/blockui.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/plugins/ui/nicescroll.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/plugins/ui/drilldown.js' %}"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/plyr/3.3.7/plyr.min.js"></script>
+
+    <script type="text/javascript" src="{% static 'js/plugins/tables/datatables/datatables.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/plugins/forms/selects/select2.min.js' %}"></script>
+	<!-- /core JS files -->
+
+	<!-- Theme JS files -->
+	<script type="text/javascript" src="{% static 'js/core/app.js' %}"></script>
+	<!-- /theme JS files -->
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center text-semibold text-primary" id="fun-title">
+            <a href="{% url 'core_views_index' %}">Rảnh coi chơi</a>
+        </h1>
+        {% block container %}
+        {% endblock %}
+        <small class="display-block text-center">
+            <span class="text-danger text-bold display-block">* CHÚ Ý *</span> *.mkv, *.avi chỉ chơi được trên Chrome và hông có tiếng :v.
+        </small>
+    </div>
+    {% block footer_extra %}
+    {% endblock %}
+    <div class="loading">
+	    <h3>Đợi tẹo nhe..</h3>
+	</div>
+</body>
+</html>

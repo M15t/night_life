@@ -1,0 +1,94 @@
+{% extends 'night_life/base.html' %}
+
+{% block title %}Put tank in a mall{% endblock %}
+
+{% block container %}
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="panel panel-flat">
+                <div class="panel-heading">
+                    <h6 class="panel-title">
+                        <span class="hidden">{{ status }}</span>
+                        {% if not video.file_name %}Dán link Fshare vô bên kia ========>{% else %}{{ video.file_name }}{% endif %}
+                        {% if not error %}
+                        <small class="display-block text-primary"><a href="{{ video.fs_url }}" target="_blank">{{ video.fs_url }}</a></small>
+                        {% endif %}
+                    </h6>
+                    <div class="heading-elements">
+                        <form class="heading-form" method="post" action="" enctype="multipart/form-data" onsubmit="return doValid();">{% csrf_token %}
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <input type="text" name="raw_url" class="form-control" placeholder="Ở đây nè" required />
+                                    <div class="input-group-btn">
+                                        <button type="submit" class="btn btn-primary btn-icon"><i class="icon-airplane3 position-left"></i>Quẩy</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                {% if video %}
+                <div class="panel-body">
+                    <video id="my-player" playsinline controls>
+                        <source src="" type="video/mp4"></source>
+                    </video>
+                    <div class="clearfix"></div>
+                    <div class="col-xs-12 text-center" style="margin-top: 20px">
+                        <a class="btn btn-success" href="{{ video.file_url }}" target="_blank"><i class="icon-airplane4 position-left"></i>Fly me to da moon</a>
+                    </div>
+                </div>
+                {% endif %}
+                {% if videos %}
+                <div class="panel-body hidden">
+                    <h4>Bà con mới coi</h4>
+                    <div class="col-md-6">
+                        <ul>
+                            {% for v in videos|slice:':5' %}
+                            <li><a href="{% url 'core_views_play' v.file_code %}">{{ v.file_name }}</a></li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <ul>
+                            {% for v in videos|slice:'5:10' %}
+                            <li><a href="{% url 'core_views_play' v.file_code %}">{{ v.file_name }}</a></li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block footer_extra %}
+    <script>
+        $(window).load(function(){
+           // PAGE IS FULLY LOADED
+           // FADE OUT YOUR OVERLAYING DIV
+           $('.loading').fadeOut();
+        });
+        $(document).ready(function(){
+            {% if error %}
+                console.log('{{ error }}');
+                alert('Loại này chưa hỗ trợ bạn eiiiiii :v.');
+            {% endif %}
+
+            const player = new Plyr('#my-player');
+            player.source = {
+                type: 'video',
+                sources: [
+                    {
+                        src: '{{ video.file_url }}',
+                        type: 'video/mp4'
+                    },
+                ]
+            };
+        });
+        function doValid(){
+            $('.loading').show();
+            return true;
+        }
+    </script>
+{% endblock %}

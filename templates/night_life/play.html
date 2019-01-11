@@ -1,0 +1,44 @@
+{% extends 'night_life/base.html' %}
+
+{% block title %}Chơi{% endblock %}
+
+{% block container %}
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="panel panel-flat">
+                <div class="panel-heading">
+                </div>
+                <div class="panel-body">
+                    <video id="my-player" playsinline controls>
+                        <source src="" type="video/mp4"></source>
+                    </video>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block footer_extra %}
+    <script>
+        $(window).load(function(){
+           // PAGE IS FULLY LOADED
+           // FADE OUT YOUR OVERLAYING DIV
+           $('.loading').fadeOut();
+        });
+        $(document).ready(function(){
+            {% if error %}
+                alert('Hông chơi định dạng này bạn eiiiiii xD');
+            {% endif %}
+            const player = new Plyr('#my-player');
+            player.source = {
+                type: 'video',
+                sources: [
+                    {
+                        src: '{{ link }}',
+                        type: 'video/mp4'
+                    },
+                ]
+            };
+        });
+    </script>
+{% endblock %}
