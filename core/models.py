@@ -1,5 +1,6 @@
-#!/usr/bin/python
 # -*- coding: utf-8 -*-
+
+import datetime
 
 from django.conf import settings
 from django.contrib.auth.models import User
@@ -9,9 +10,6 @@ from django.template.defaultfilters import slugify
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 
-from .securityutils import *
-
-import datetime
 
 FSHARE_CHOICE = 'FSHARE'
 SOURCE_CHOICES = (
@@ -50,26 +48,4 @@ class Video(models.Model):
         return now.strftime('%m%d%y%I%M%S%f')
 
     def save(self, *args, **kwargs):
-        import subprocess
-        import os
-
-        # if not self.file_code:
-        #     self.file_code = encode(self.fs_url)
-
         super(Video, self).save(*args, **kwargs)
-
-        # if not self.cover_img:
-        #     settings_dir = os.path.dirname(__file__)
-        #     PROJECT_ROOT = os.path.abspath(os.path.dirname(settings_dir))
-        #     MEDIA_PATH = os.path.join(PROJECT_ROOT, 'media/')
-        #
-        #     video_input_path = self.file_url
-        #     thumb_file_path = 'thumb/' + str(self.pk) + '-thumb-' + self.get_current_time() + '.jpg'
-        #     img_output_path = MEDIA_PATH + thumb_file_path
-        #     try:
-        #         subprocess.call(['ffmpeg', '-i', video_input_path, '-ss', '00:00:02.000', '-vframes', '1', img_output_path])
-        #         self.cover_img = thumb_file_path
-        #         super(Video, self).save(*args, **kwargs)
-        #     except Exception as e:
-        #         print e
-

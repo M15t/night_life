@@ -6,7 +6,7 @@ import requests
 from threading import Thread
 from lxml import html
 
-from .models import *
+from .models import Video, VideoFolder
 
 
 def is_file(url):
@@ -129,7 +129,6 @@ class save_extracted_link_file_thread(Thread):
                 video.save()
         except Exception as e:
             print e
-            pass
 
 
 def save_video(account, code):

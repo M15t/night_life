@@ -27,15 +27,6 @@ def index(request, code=None):
     videos = []
     error = False
 
-    try:
-        if code:
-            video = save_video(account, code)
-        else:
-            videos = Video.objects.all().order_by('-pk')
-    except Exception as e:
-        print e
-        error = str(e)
-
     if request.POST:
         raw_url = request.POST.get('raw_url', '')
 
@@ -50,6 +41,30 @@ def index(request, code=None):
         'error': error
     }
 
+    return render(request, TEMPLATE_PATH + 'index.html', params)
+
+
+def play(request, code):
+    global account
+
+    video = []
+    videos = []
+    error = False
+
+    try:
+        if code:
+            video = save_video(account, code)
+        else:
+            videos = Video.objects.all().order_by('-pk')
+    except Exception as e:
+        print e
+        error = str(e)
+
+    params = {
+        'video': video,
+        'videos': videos,
+        'error': error
+    }
     return render(request, TEMPLATE_PATH + 'index.html', params)
 
 
