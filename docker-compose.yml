@@ -8,10 +8,10 @@ services:
     volumes:
       - db-data:/var/lib/mysql/data
     environment:
-      MYSQL_ROOT_PASSWORD: 123456
+      MYSQL_ROOT_PASSWORD: mysql
       MYSQL_DATABASE: mysqldb
-      MYSQL_USER: user
-      MYSQL_PASSWORD: 123456
+      MYSQL_USER: mysql
+      MYSQL_PASSWORD: mysql
 
 volumes:
   db-data:

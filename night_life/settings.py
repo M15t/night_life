@@ -84,8 +84,8 @@ DATABASES = {
         # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
 
         'NAME': 'mysqldb',  # Or path to database file if using sqlite3.
-        'USER': 'root',  # Not used with sqlite3.
-        'PASSWORD': '123456',  # Not used with sqlite3.
+        'USER': 'mysql',  # Not used with sqlite3.
+        'PASSWORD': 'mysql',  # Not used with sqlite3.
         # Set to empty string for localhost. Not used with sqlite3.
         'HOST': '',
         'PORT': '',  # Set to empty string for default. Not used with sqlite3.
