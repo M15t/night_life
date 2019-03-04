@@ -1,0 +1,3 @@
+#!/bin/bash
+source ~/.virtualenvs/dj111/bin/activate
+$2

@@ -1,0 +1,29 @@
+SHELL=./scripts/make-venv
+.DEFAULT_GOAL := help
+
+# Generates a help message. Borrowed from https://github.com/pydanny/cookiecutter-djangopackage.
+help: ## Display this help message
+	@echo "Please use \`make <target>' where <target> is one of"
+	@perl -nle'print $& if m{^[\.a-zA-Z_-]+:.*?## .*$$}' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m  %-25s\033[0m %s\n", $$1, $$2}'
+
+
+dev.provision: ## Provision dev environment
+	docker-compose up -d
+	@$(MAKE) migrate
+
+dev.up: ## Bring up the server on dev environment
+	docker-compose up -d
+	python manage.py runserver 0.0.0.0:3011
+
+migrate: ## Run database migrations
+	python manage.py migrate
+	python manage.py makemigrations
+	python manage.py migrate
+
+deploy: stg.deploy ## Alias of stg.deploy
+
+stg.deploy: ## Deploy to customer STG server
+	scripts/deployer.sh stg
+
+prod.deploy: ## Deploy to customer PROD server
+	scripts/deployer.sh prod
