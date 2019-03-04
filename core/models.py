@@ -34,7 +34,7 @@ class Video(models.Model):
 
     file_code = models.CharField(max_length=255, blank=True, null=True)
     file_name = models.CharField(max_length=255, blank=True, null=True)
-    file_url = models.CharField(max_length=500, blank=True, null=True)
+    file_url = models.TextField(blank=True, null=True)
     file_size = models.CharField(max_length=20, blank=True, null=True)
     file_type = models.CharField(max_length=10, blank=True, null=True)
     cover_img = models.ImageField(upload_to='cover', blank=True, null=True)

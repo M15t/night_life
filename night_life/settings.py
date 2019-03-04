@@ -12,8 +12,10 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 
 import os
 import pymysql
+import dotenv
 
 pymysql.install_as_MySQLdb()
+dotenv.read_dotenv()
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -75,20 +77,23 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'night_life.wsgi.application'
 
+
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
+        'ENGINE': os.environ['DB_ENGINE'],
         # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
 
-        'NAME': 'mysqldb',  # Or path to database file if using sqlite3.
-        'USER': 'mysql',  # Not used with sqlite3.
-        'PASSWORD': 'mysql',  # Not used with sqlite3.
+        # Or path to database file if using sqlite3.
+        'NAME': os.environ['DB_NAME'],
+        'USER': os.environ['DB_USER'],  # Not used with sqlite3.
+        'PASSWORD': os.environ['DB_PASSWORD'],  # Not used with sqlite3.
         # Set to empty string for localhost. Not used with sqlite3.
-        'HOST': '',
-        'PORT': '',  # Set to empty string for default. Not used with sqlite3.
+        'HOST': os.environ['DB_HOST'],
+        # Set to empty string for default. Not used with sqlite3.
+        'PORT': os.environ['DB_PORT'],
     }
 }
 

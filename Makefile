@@ -1,5 +1,6 @@
-SHELL=./scripts/make-venv
+SHELL=./scripts/make-venv.sh #must update each project
 .DEFAULT_GOAL := help
+
 
 # Generates a help message. Borrowed from https://github.com/pydanny/cookiecutter-djangopackage.
 help: ## Display this help message
@@ -16,7 +17,6 @@ dev.up: ## Bring up the server on dev environment
 	python manage.py runserver 0.0.0.0:3011
 
 migrate: ## Run database migrations
-	python manage.py migrate
 	python manage.py makemigrations
 	python manage.py migrate
 
