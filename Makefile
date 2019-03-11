@@ -9,6 +9,7 @@ help: ## Display this help message
 
 
 dev.provision: ## Provision dev environment
+	pip install -r ./requirements.txt
 	docker-compose up -d
 	@$(MAKE) migrate
 

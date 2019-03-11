@@ -2,8 +2,9 @@
   <div class="panel-heading">
     <h6 class="panel-title">
       <span class="hidden">{{ status }}</span>
-      {% if not video.file_name %}Paste your link Fshare to the right ========>{% else %}{{ video.file_name }}{% endif
-      %} {% if not error %}
+      {% if not video.file_name %} Paste your link Fshare to the right ========> {% else %}
+      {{ video.file_name }}
+      {% endif %} {% if not error %}
       <small class="display-block text-primary"
         ><a href="{{ video.fs_url }}" target="_blank">{{ video.fs_url }}</a></small
       >
@@ -26,31 +27,29 @@
 </div>
 
 <script>
-  function doValid(){
-      var expression = /[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?/gi;
-      var regex = new RegExp(expression);
-      var url = $("#url").val();
+  function doValid() {
+    var expression = /[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?/gi;
+    var regex = new RegExp(expression);
+    var url = $('#url').val();
 
-      if (url && url.match(regex)) {
-          $("#raw_url").val(url);
-          return true
-      }
+    if (url && url.match(regex)) {
+      $('#raw_url').val(url);
+      return true;
+    }
 
-      return false;
+    return false;
   }
   function getLink() {
-      var value =
-      $.ajax({
-          type : "POST",
-          url : "{% url 'core_views_get' %}",
-          data :  {
-              code : JSON.stringify(data)
-          },
-          dataType: 'json',
-          success : function(response){
-              // console.log(response);
-              {% comment %} window.location = "{% url 'core_views_play'  %}"; {% endcomment %}
-          }
-      });
+    var value = $.ajax({
+      type: 'POST',
+      url: "{% url 'core_views_get' %}",
+      data: {
+        code: JSON.stringify(data),
+      },
+      dataType: 'json',
+      success: function(response) {
+        console.log(response);
+      },
+    });
   }
 </script>
