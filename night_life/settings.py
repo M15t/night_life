@@ -31,7 +31,7 @@ SECURITY_AES_KEY = 'n(=9b*)_d)vzfo57tkp$%^&*(0saj638'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['.amazonaws.com', 'localhost']
 
 # Application definition
 

@@ -13,7 +13,8 @@ urlpatterns = [
 
     url('^remove/(?P<video_id>.*)/$', views.remove, name='core_views_remove'),
     url('^list/$', views.list, name='core_views_list'),
-    url('^(?P<code>.*)/$', views.play, name='core_views_play'),
+    url('^get/$', views.get, name='core_views_get'),
+    url('^play/(?P<code>.*)/$', views.play, name='core_views_play'),
 
     url('^$', views.index, name='core_views_index'),
 ]

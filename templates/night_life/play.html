@@ -1,19 +1,27 @@
 {% extends 'night_life/base.html' %}
+{% load mytags %}
 
-{% block title %}Chơi{% endblock %}
+{% block title %}Play{% endblock %}
 
 {% block container %}
     <div class="row">
         <div class="col-xs-12">
-            <div class="panel panel-flat">
-                <div class="panel-heading">
-                </div>
+            {% getlink %}
+            {% if video %}
+            <div class="panel panel-flat">        
                 <div class="panel-body">
+                    <h4 class="no-margin">{{video.file_name}}</h4>
+                    <h5><a target="blank" href="{{video.fs_url}}">{{video.fs_url}}</a></h5>
                     <video id="my-player" playsinline controls>
                         <source src="" type="video/mp4"></source>
                     </video>
-                </div>
+                    <div class="clearfix"></div>
+                    <div class="col-xs-12 text-center" style="margin-top: 20px">
+                        <a class="btn btn-success" href="{{ video.file_url }}" target="_blank"><i class="icon-airplane4 position-left"></i>Fly me to da moon</a>
+                    </div>
+                </div>    
             </div>
+            {% endif %}
         </div>
     </div>
 {% endblock %}
@@ -26,15 +34,15 @@
            $('.loading').fadeOut();
         });
         $(document).ready(function(){
-            {% if error %}
-                alert('Hông chơi định dạng này bạn eiiiiii xD');
+            {% if error_string %}
+                alert('{{error_string|safe}}');
             {% endif %}
             const player = new Plyr('#my-player');
             player.source = {
                 type: 'video',
                 sources: [
                     {
-                        src: '{{ link }}',
+                        src: '{{ video.file_url }}',
                         type: 'video/mp4'
                     },
                 ]

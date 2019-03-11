@@ -14,6 +14,7 @@ dev.provision: ## Provision dev environment
 
 dev.up: ## Bring up the server on dev environment
 	docker-compose up -d
+	scripts/waitdb.sh
 	python manage.py runserver 0.0.0.0:3011
 
 migrate: ## Run database migrations

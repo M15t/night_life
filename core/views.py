@@ -20,52 +20,60 @@ global account
 account = FS(email=MY_ID, password=MY_PWD)
 
 
-def index(request, code=None):
+def index(request):
+
+    # if request.POST:
+    #     raw_url = request.POST.get('raw_url', '')
+
+    #     if is_file(raw_url):
+    #         return redirect('core_views_play', code=get_media_id(raw_url))
+    #     else:
+    #         error = "Này không phải là file bạn eiiii"
+
+    params = {}
+
+    return render(request, TEMPLATE_PATH + 'index.html', params)
+
+
+def get(request):
     global account
 
     video = []
     videos = []
-    error = False
+    error_string = False
+    raw_url = request.POST.get("raw_url", "")
 
     if request.POST:
-        raw_url = request.POST.get('raw_url', '')
-
         if is_file(raw_url):
-            return redirect('core_views_play', code=get_media_id(raw_url))
+            code = get_media_id(raw_url)
         else:
-            error = "Này không phải là file bạn eiiii"
+            error_string = "Not valid Fshare link"
+
+        video = save_video(account, code)
 
     params = {
         'video': video,
-        'videos': videos,
-        'error': error
+        'code': video.file_code,
+        'error_string': error_string
     }
-
-    return render(request, TEMPLATE_PATH + 'index.html', params)
+    return render(request, TEMPLATE_PATH + 'play.html', params)
 
 
 def play(request, code):
     global account
 
     video = []
-    videos = []
-    error = False
-
+    error_string = False
     try:
-        if code:
-            video = save_video(account, code)
-        else:
-            videos = Video.objects.all().order_by('-pk')
-    except Exception as e:
-        print e
-        error = str(e)
+        video = Video.objects.get(file_code=code)
+    except:
+        error_string = "No data found"
 
     params = {
         'video': video,
-        'videos': videos,
-        'error': error
+        'error_string': error_string
     }
-    return render(request, TEMPLATE_PATH + 'index.html', params)
+    return render(request, TEMPLATE_PATH + 'play.html', params)
 
 
 def list(request):
