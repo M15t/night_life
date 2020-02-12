@@ -9,15 +9,15 @@ from django.core.exceptions import PermissionDenied
 
 from .forms import *
 from .models import *
-from .utils import FS
+from .utils import FSAPI
 from .functions import *
 
 TEMPLATE_PATH = 'night_life/'
 
 MY_ID = 'trees1411@yahoo.com'
-MY_PWD = 'hidesomeone1'
+MY_PWD = 'H!d3someone!2'
 global account
-account = FS(email=MY_ID, password=MY_PWD)
+account = FSAPI(email=MY_ID, password=MY_PWD)
 
 
 def index(request):
@@ -92,4 +92,20 @@ def remove(request, video_id):
 
 
 def test(request):
+    mine = FSAPI(email=MY_ID, password=MY_PWD)
+    mine.login()
+    resp = mine.get_folder_urls("https://www.fshare.vn/folder/AT2HY4EGQ1P5")
+
+    for d in resp:
+        if d['mimetype'] != "text/plain":
+            new_video = Video(fs_url=d['furl'], file_name=d['name'], file_code=d['linkcode'], file_url=mine.download(d['furl']), file_size=humanbytes(d['size']), file_type=d['mimetype'])
+            new_video.save()
+
+
+    # fs_url = "https://www.fshare.vn/file/QZKINH4VRWXR"
+    # new_video = Video(fs_url=fs_url, file_code=get_media_id(fs_url), file_url=mine.download(fs_url))
+    # new_video.save()
+    # print "===", mine.download(fs_url)
+    # print "===", mine.profile()
+    # print "===", mine.get_file_info("https://www.fshare.vn/file/32RFHTIR3TK3")
     return

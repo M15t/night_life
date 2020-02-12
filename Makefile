@@ -13,16 +13,17 @@ dev.provision: ## Provision dev environment
 	docker-compose up -d
 	@$(MAKE) migrate
 
-dev.up: ## Bring up the server on dev environment
+start: ## Bring up the server on dev environment
 	docker-compose up -d
 	scripts/waitdb.sh
-	python manage.py runserver 0.0.0.0:3011
+	python manage.py runserver 0.0.0.0:8080
 
 migrate: ## Run database migrations
 	python manage.py makemigrations
 	python manage.py migrate
 
-deploy: stg.deploy ## Alias of stg.deploy
+deploy: ## Alias of stg.deploy
+	stg.deploy 
 
 stg.deploy: ## Deploy to customer STG server
 	scripts/deployer.sh stg
