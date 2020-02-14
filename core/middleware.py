@@ -32,7 +32,8 @@ class MacAddressParser():
 
     def _doParseMacAddress_Win(self):
         # get the arp list
-        p1 = subprocess.Popen(['arp', '-a'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        p1 = subprocess.Popen(
+            ['arp', '-a'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
         out1, err1 = p1.communicate()
         #         print "ARP:", out1
@@ -56,7 +57,8 @@ class MacAddressParser():
 
     def _doParseMacAddress_Linux(self):
         # get the arp list
-        p1 = subprocess.Popen(['arp', '-a'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        p1 = subprocess.Popen(
+            ['arp', '-a'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
         out1, err1 = p1.communicate()
         #         print "ARP:", out1
@@ -95,7 +97,8 @@ def get_client_ip(request):
 
 
 def check_ping(hostname):
-    response = os.system("ping " + ("-n 1 " if platform.system().lower() == "windows" else "-c 1 ") + hostname)
+    response = os.system(
+        "ping " + ("-n 1 " if platform.system().lower() == "windows" else "-c 1 ") + hostname)
     #     print response
     # and then check the response...
     if response == 0:
@@ -153,7 +156,6 @@ class PrintMacAddressAndIpMiddleware(object):
         return response
 
 
-
 class QueryCountDebugMiddleware(object):
     """
     This middleware will log the number of queries run
@@ -161,6 +163,7 @@ class QueryCountDebugMiddleware(object):
     status code of 200). It does not currently support
     multi-db setups.
     """
+
     def __init__(self, get_response):
         self.get_response = get_response
 
@@ -183,7 +186,8 @@ class QueryCountDebugMiddleware(object):
                     total_time += float(query_time)
 
                 # logger.info('%s queries run, total %s seconds' % (len(connection.queries), total_time))
-                print('%s queries run, total %s seconds' % (len(connection.queries), total_time))
+                print('%s queries run, total %s seconds' %
+                      (len(connection.queries), total_time))
         except Exception as e:
             print e
             pass
@@ -218,14 +222,14 @@ class cfgWebsiteMiddleware(object):
 #         print cf.site_name
 
 
-# 
+#
 # class MemoryUsageMiddleware(object):
 #     import psutil
 # #     from psutil import  Process as psutilProcess
-#     
+#
 #     if settings.py.DEBUG:
-#         
-# 
+#
+#
 #         ''' Hiển thị memory usage từng request bằng cách tính memory trước khi request và sau khi request '''
 #         """
 #         Measure memory taken by requested view, and response
@@ -233,28 +237,28 @@ class cfgWebsiteMiddleware(object):
 #         def _is_media_request(self, request):
 #             path = request.META['PATH_INFO']
 #             return "media" in path or (settings.py.MEDIA_URL and settings.py.MEDIA_URL in path)
-#          
+#
 #         def _sizeof_fmt(self, num, suffix='B'):
 #             for unit in ['','K','M','G','T']:
 #                 if abs(num) < 1024.0:
 #                     return "%3.1f%s%s" % (num, unit, suffix)
 #                 num /= 1024.0
-#             return "%.1f%s%s" % (num, 'Yi', suffix)    
-#          
+#             return "%.1f%s%s" % (num, 'Yi', suffix)
+#
 #         def process_request(self, request):
 #             if self._is_media_request(request):
 #                 return None
 #             # lưu thông tin trước request
 #             request._mem = psutil.Process(os.getpid()).memory_info()
-#              
-#        
+#
+#
 #         def process_response(self, request, response):
 #             if self._is_media_request(request):
 #                 return response
-#              
+#
 #             mem = psutil.Process(os.getpid()).memory_info()
 #             diff = mem.rss - request._mem.rss
-#      
+#
 #             print(
 #                 "PROCESSED %s: memory used %s (%s -> %s), response size: %s" %
 #                 (request.path,
@@ -263,5 +267,5 @@ class cfgWebsiteMiddleware(object):
 #                 self._sizeof_fmt(mem.rss),
 #                 self._sizeof_fmt(len(response.content)),)
 #             )
-#              
+#
 #             return response

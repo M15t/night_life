@@ -17,14 +17,18 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Video',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.AutoField(auto_created=True,
+                                        primary_key=True, serialize=False, verbose_name='ID')),
                 ('fs_url', models.CharField(blank=True, max_length=100, null=True)),
-                ('file_code', models.CharField(blank=True, max_length=255, null=True)),
-                ('file_name', models.CharField(blank=True, max_length=255, null=True)),
+                ('file_code', models.CharField(
+                    blank=True, max_length=255, null=True)),
+                ('file_name', models.CharField(
+                    blank=True, max_length=255, null=True)),
                 ('file_url', models.CharField(blank=True, max_length=500, null=True)),
                 ('file_size', models.CharField(blank=True, max_length=20, null=True)),
                 ('file_type', models.CharField(blank=True, max_length=10, null=True)),
-                ('cover_img', models.ImageField(blank=True, null=True, upload_to=b'cover')),
+                ('cover_img', models.ImageField(
+                    blank=True, null=True, upload_to=b'cover')),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
                 ('updated_at', models.DateTimeField(auto_now=True)),
             ],
@@ -32,15 +36,18 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='VideoFolder',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.AutoField(auto_created=True,
+                                        primary_key=True, serialize=False, verbose_name='ID')),
                 ('fs_url', models.CharField(blank=True, max_length=100, null=True)),
-                ('folder_name', models.CharField(blank=True, max_length=255, null=True)),
+                ('folder_name', models.CharField(
+                    blank=True, max_length=255, null=True)),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
             ],
         ),
         migrations.AddField(
             model_name='video',
             name='folder',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='core.VideoFolder'),
+            field=models.ForeignKey(
+                blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='core.VideoFolder'),
         ),
     ]

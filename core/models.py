@@ -17,27 +17,14 @@ SOURCE_CHOICES = (
 )
 
 
-class VideoFolder(models.Model):
-    fs_url = models.CharField(max_length=100, blank=True, null=True)
-    folder_name = models.CharField(max_length=255, blank=True, null=True)
-
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    def save(self, *args, **kwargs):
-        # do something here
-        super(VideoFolder, self).save(*args, **kwargs)
-
-
 class Video(models.Model):
-    folder = models.ForeignKey(VideoFolder, blank=True, null=True)
     fs_url = models.CharField(max_length=100, blank=True, null=True)
 
     file_code = models.CharField(max_length=255, blank=True, null=True)
     file_name = models.CharField(max_length=255, blank=True, null=True)
     file_url = models.TextField(blank=True, null=True)
     file_size = models.CharField(max_length=20, blank=True, null=True)
-    file_type = models.CharField(max_length=10, blank=True, null=True)
-    cover_img = models.ImageField(upload_to='cover', blank=True, null=True)
+    file_type = models.CharField(max_length=30, blank=True, null=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -49,3 +36,15 @@ class Video(models.Model):
 
     def save(self, *args, **kwargs):
         super(Video, self).save(*args, **kwargs)
+
+
+class FSConfig(models.Model):
+    app_key = models.CharField(max_length=100, blank=True, null=True)
+
+    token = models.CharField(max_length=100, blank=True, null=True)
+    cookie = models.CharField(max_length=50, blank=True, null=True)
+
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def save(self, *args, **kwargs):
+        super(FSConfig, self).save(*args, **kwargs)

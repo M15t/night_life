@@ -1,10 +1,13 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+import json
+
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseForbidden
 from django.core.exceptions import PermissionDenied
+from django.views.decorators.csrf import csrf_exempt
 
 
 from .forms import *
@@ -20,43 +23,45 @@ global account
 account = FSAPI(email=MY_ID, password=MY_PWD)
 
 
+@csrf_exempt
+def reponseSuccessJSON(request, data):
+    # we allow to request JSONP here
+    try:
+        callback = request.GET.get("callback", "")
+    except:
+        callback = ""
+    if (callback == ""):  # return as json normal
+        return HttpResponse(json.dumps(data))
+    else:  # return as jsonp
+        return HttpResponse(callback + "(" + json.dumps(data) + ")")
+
+
 def index(request):
-
-    # if request.POST:
-    #     raw_url = request.POST.get('raw_url', '')
-
-    #     if is_file(raw_url):
-    #         return redirect('core_views_play', code=get_media_id(raw_url))
-    #     else:
-    #         error = "Này không phải là file bạn eiiii"
-
     params = {}
-
     return render(request, TEMPLATE_PATH + 'index.html', params)
 
 
+@csrf_exempt
 def get(request):
     global account
 
-    video = []
-    videos = []
-    error_string = False
-    raw_url = request.POST.get("raw_url", "")
+    video = {}
+    error_string = ""
+    url = request.POST.get("url", "")
 
     if request.POST:
-        if is_file(raw_url):
-            code = get_media_id(raw_url)
+        if is_file(url) and leak_video(url):
+            video = leak_video(url)
+        elif is_folder(url) and leak_folder(url):
+            video = leak_folder(url)[0]
         else:
-            error_string = "Not valid Fshare link"
+            error_string = "Invalid link"
 
-        video = save_video(account, code)
-
-    params = {
-        'video': video,
-        'code': video.file_code,
-        'error_string': error_string
+    jsondata = {
+        "error_string": error_string,
+        "code": video.file_code if video else "",
     }
-    return render(request, TEMPLATE_PATH + 'play.html', params)
+    return reponseSuccessJSON(request, jsondata)
 
 
 def play(request, code):
@@ -92,20 +97,6 @@ def remove(request, video_id):
 
 
 def test(request):
-    mine = FSAPI(email=MY_ID, password=MY_PWD)
-    mine.login()
-    resp = mine.get_folder_urls("https://www.fshare.vn/folder/AT2HY4EGQ1P5")
-
-    for d in resp:
-        if d['mimetype'] != "text/plain":
-            new_video = Video(fs_url=d['furl'], file_name=d['name'], file_code=d['linkcode'], file_url=mine.download(d['furl']), file_size=humanbytes(d['size']), file_type=d['mimetype'])
-            new_video.save()
-
-
-    # fs_url = "https://www.fshare.vn/file/QZKINH4VRWXR"
-    # new_video = Video(fs_url=fs_url, file_code=get_media_id(fs_url), file_url=mine.download(fs_url))
-    # new_video.save()
-    # print "===", mine.download(fs_url)
-    # print "===", mine.profile()
-    # print "===", mine.get_file_info("https://www.fshare.vn/file/32RFHTIR3TK3")
-    return
+    leak_video("https://www.fshare.vn/file/6Y4D8T4TJXT3MMY")
+    # leak_folder("https://www.fshare.vn/folder/AT2HY4EGQ1P5")
+    return HttpResponse("Testing..")

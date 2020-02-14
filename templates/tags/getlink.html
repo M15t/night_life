@@ -13,13 +13,12 @@
     <div class="heading-elements">
       <div class="form-group">
         <div class="input-group">
-          <input type="text" id="url" class="form-control" placeholder="Here" required />
+          <input type="text" id="url" name="url" class="form-control" placeholder="Here" required />
           <div class="input-group-btn">
-            <button type="button" onclick="getLink();" class="btn btn-primary btn-icon">
+            <button type="button" onclick="getLink()" class="btn btn-primary btn-icon">
               <i class="icon-airplane3 position-left"></i>Fly
             </button>
           </div>
-          <input type="hidden" id="raw_url" name="raw_url" />
         </div>
       </div>
     </div>
@@ -27,28 +26,24 @@
 </div>
 
 <script>
-  function doValid() {
-    var expression = /[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?/gi;
-    var regex = new RegExp(expression);
-    var url = $('#url').val();
-
-    if (url && url.match(regex)) {
-      $('#raw_url').val(url);
-      return true;
-    }
-
-    return false;
-  }
   function getLink() {
-    var value = $.ajax({
+    $('.loading').show();
+    $.ajax({
       type: 'POST',
       url: "{% url 'core_views_get' %}",
       data: {
-        code: JSON.stringify(data),
+        url: $('#url').val(),
       },
       dataType: 'json',
       success: function(response) {
-        console.log(response);
+        $('.loading').fadeOut();
+        if (response.error_string != "") {
+          alert(response.error_string);
+        } 
+        if (response.code != "") {
+          var url = "{% url 'core_views_play' 6969 %}".replace(6969, response.code);
+				  window.location.href = url;
+        }
       },
     });
   }

@@ -14,11 +14,11 @@ def encode(string):
         PADDING = '{'
 
         # one-liner to sufficiently pad the text to be encrypted
-        pad = lambda s: s + (BLOCK_SIZE - len(s) % BLOCK_SIZE) * PADDING
+        def pad(s): return s + (BLOCK_SIZE - len(s) % BLOCK_SIZE) * PADDING
 
         # one-liners to encrypt/encode and decrypt/decode a string
         # encrypt with AES, encode with base64
-        EncodeAES = lambda c, s: base64.b64encode(c.encrypt(pad(s)))
+        def EncodeAES(c, s): return base64.b64encode(c.encrypt(pad(s)))
 
         # create a cipher object
         cipher = AES.new(settings.SECURITY_AES_KEY)
@@ -41,11 +41,12 @@ def decode(string):
         PADDING = '{'
 
         # one-liner to sufficiently pad the text to be encrypted
-        pad = lambda s: s + (BLOCK_SIZE - len(s) % BLOCK_SIZE) * PADDING
+        def pad(s): return s + (BLOCK_SIZE - len(s) % BLOCK_SIZE) * PADDING
 
         # one-liners to encrypt/encode and decrypt/decode a string
         # encrypt with AES, encode with base64
-        DecodeAES = lambda c, e: c.decrypt(base64.b64decode(e)).rstrip(PADDING)
+        def DecodeAES(c, e): return c.decrypt(
+            base64.b64decode(e)).rstrip(PADDING)
 
         # create a cipher object
         cipher = AES.new(settings.SECURITY_AES_KEY)

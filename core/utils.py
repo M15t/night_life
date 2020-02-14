@@ -8,42 +8,63 @@ import string
 from hyper import HTTPConnection
 import requests
 
+from .models import FSConfig
 
-# "token": "70dcbdf9327f0cc424d864a6fb99550df8f0c19f",
-# "session_id": "ebnjnarb6vh9ih4nv5ujqcaft2"
+PING_URL = 'https://www.fshare.vn/file/QSIXWEZKM26E'
+
 
 class FSAPI:
     """
     API Interface of Fshare.vn
     """
+
     def __init__(self, email, password):
-        self.email = "trees1411@yahoo.com"
-        self.password = "H!d3someone!2"
+        self.email = email
+        self.password = password
         self.token = ""
         self.s = requests.Session()
         self.s.headers['User-Agent'] = 'okhttp/3.6.0'
 
     def login(self):
+        config = FSConfig.objects.get(pk=1)
+
         data = {
             'user_email': self.email,
             'password': self.password,
-            'app_key': "GUxft6Beh3Bf8qKP7GC2IplYJZz1A53JQfRwne0R"
+            'app_key': config.app_key,
         }
 
-        """ conn = HTTPConnection('api.fshare.vn:443')
-        
-        login_request = conn.request('POST', '/api/user/login/', body=json.dumps(data))
-
-        response = conn.get_response(login_request)
-
-        login_data = json.loads(response.read().decode('utf-8')) 
-        self.token = login_data['token']
-        cookie = login_data['session_id']
-        self.s.cookies.set('session_id', cookie) """
-
-        self.token = "70dcbdf9327f0cc424d864a6fb99550df8f0c19f"
-        cookie = "hukm5dc41jfdivq33erspa403c"
+        self.token = config.token
+        cookie = config.cookie
         self.s.cookies.set('session_id', cookie)
+
+        # call a test
+        r = self.s.post(
+            'https://api.fshare.vn/api/fileops/get',
+            json={
+                'token': self.token,
+                'url': PING_URL,
+            }
+        )
+
+        if r.status_code != 200:
+            conn = HTTPConnection('api.fshare.vn:443')
+
+            login_request = conn.request(
+                'POST', '/api/user/login/', body=json.dumps(data))
+
+            response = conn.get_response(login_request)
+
+            login_data = json.loads(response.read().decode('utf-8'))
+
+            config.token = login_data['token']
+            config.cookie = login_data['session_id']
+            config.save()
+
+            self.token = config.token
+            cookie = config.cookie
+            self.s.cookies.set('session_id', cookie)
+
         return data
 
     def profile(self):
@@ -96,7 +117,8 @@ class FSAPI:
         return data
 
     def get_home_folders(self):
-        r = self.s.get('https://api.fshare.vn/api/fileops/list?pageIndex=0&dirOnly=0&limit=60')
+        r = self.s.get(
+            'https://api.fshare.vn/api/fileops/list?pageIndex=0&dirOnly=0&limit=60')
         return r.json()
 
     def get_file_info(self, url):
@@ -116,6 +138,7 @@ class FSAPI:
         import ntpath
         import unidecode
         file_name = ntpath.basename(local_path)
+
         def format_filename(s):
             valid_chars = "-_.() %s%s" % (string.ascii_letters, string.digits)
             filename = ''.join(c for c in s if c in valid_chars)

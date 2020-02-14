@@ -7,8 +7,10 @@ attrs_numbercontrol = {'class': 'form-control', 'step': '1', 'min': '1'}
 attrs_selectcontrol = {'class': 'select-with-search'}
 attrs_editor = {'class': 'form-control'}
 # attrs_single_date_picker = {'class':'form-control daterange-single'}
-attrs_single_date_picker = {'class': 'form-control jq-datepicker-icon', "placeHolder": "MM/DD/YYYY"}
-attrs_single_time_picker = {'class': 'form-control timepicker-icon', "placeHolder": "H:m"}
+attrs_single_date_picker = {
+    'class': 'form-control jq-datepicker-icon', "placeHolder": "MM/DD/YYYY"}
+attrs_single_time_picker = {
+    'class': 'form-control timepicker-icon', "placeHolder": "H:m"}
 attrs_datetime_picker = {'class': 'form-control anytime-both'}
 attrs_file_picker = {'data-clear-btn': 'true', 'class': 'file-styled'}
 attrs_multiple_file_picker = {'data-clear-btn': 'true', 'class': 'file-input'}

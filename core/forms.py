@@ -18,6 +18,3 @@ import re
 from models import *
 from custom_widget import *
 from form_utils import applyClassConfig2FormControl
-
-
-

@@ -1,87 +1,90 @@
-{% extends 'night_life/base.html' %}
-
-{% block title %}Danh sách{% endblock %}
-
-{% block container %}
-    <div class="row">
-        <div class="col-xs-12">
-            <div class="panel panel-flat">
-                <div class="panel-heading">
-                    <h5 class="panel-title">Danh sách</h5>
-                </div>
-                <table class="table my-datatable">
-                    <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Tên</th>
-                        <th>Code</th>
-                        <th class="text-right">Lớn</th>
-                        <th class="text-right">Loại</th>
-                        <th class="text-right">Ngày</th>
-                        <th class="text-right">Làm</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {% for video in videos %}
-                        <tr>
-                            <td>{{ forloop.counter }}</td>
-                            <td><a target="_blank"
-                                   href="{% url 'core_views_play' video.file_code %}">{{ video.file_name }}</a>
-                            </td>
-                            <td>
-                                <a class="text-danger" href="https://www.fshare.vn/file/{{ video.file_code }}" target="_blank"><u>{{ video.file_code }}</u></a>
-                            </td>
-                            <td class="text-right">
-                                {{ video.file_size }}
-                            </td>
-                            <td class="text-right">
-                                {{ video.file_type }}
-                            </td>
-                            <td class="text-right">
-                                {{ video.updated_at|date:"Y-m-d H:i" }}
-                            </td>
-                            <td>
-                                <button class="btn btn-danger" onclick="deleteItem('{% url 'core_views_remove' video.pk %}')">Xóa</button>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-
-        </div>
+{% extends 'night_life/base.html' %} {% block title %}Danh sách{% endblock %} {% block container %}
+<div class="row">
+  <div class="col-xs-12">
+    <div class="panel panel-flat">
+      <div class="panel-heading">
+        <h5 class="panel-title">List of stuffs</h5>
+      </div>
+      <table class="table my-datatable">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Code</th>
+            <th class="text-right">Size</th>
+            <th class="text-right">Type</th>
+            <th class="text-right">Updated At</th>
+            <th class="text-right">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for video in videos %}
+          <tr>
+            <td>{{ forloop.counter }}</td>
+            <td><a target="_blank" href="{% url 'core_views_play' video.file_code %}">{{ video.file_name }}</a></td>
+            <td>
+              <a href="https://www.fshare.vn/file/{{ video.file_code }}" target="_blank"
+                ><u>{{ video.file_code }}</u></a
+              >
+            </td>
+            <td class="text-right">
+              {{ video.file_size }}
+            </td>
+            <td class="text-right">
+              {{ video.file_type }}
+            </td>
+            <td class="text-right">
+              {{ video.updated_at|date:"Y-m-d H:i" }}
+            </td>
+            <td>
+              <button class="btn btn-danger" onclick="deleteItem(`{% url 'core_views_remove' video.pk %}`)">
+                Xóa
+              </button>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
     </div>
-{% endblock %}
-
-{% block footer_extra %}
-    <script>
-        $(window).load(function(){
-           // PAGE IS FULLY LOADED
-           // FADE OUT YOUR OVERLAYING DIV
-           $('.loading').fadeOut();
-        });
-        $(document).ready(function () {
-            $('.my-datatable').DataTable({
-                autoWidth: false,
-                dom: '<"datatable-header"fl><"datatable-scroll"t><"datatable-footer"ip>',
-                language: {
-                    search: '<span>Filter:</span> _INPUT_',
-                    searchPlaceholder: 'Type to filter...',
-                    lengthMenu: '<span>Show:</span> _MENU_',
-                    paginate: {'first': 'First', 'last': 'Last', 'next': '&rarr;', 'previous': '&larr;'}
-                },
-                drawCallback: function () {
-                    $(this).find('tbody tr').slice(-3).find('.dropdown, .btn-group').addClass('dropup');
-                },
-                preDrawCallback: function () {
-                    $(this).find('tbody tr').slice(-3).find('.dropdown, .btn-group').removeClass('dropup');
-                }
-            });
-        });
-        function deleteItem(url){
-            if (confirm('Xóa hả ku?')) {
-                window.location.href = url;
-            }
-        }
-    </script>
+  </div>
+</div>
+{% endblock %} {% block footer_extra %}
+<script>
+  $(window).load(function() {
+    // PAGE IS FULLY LOADED
+    // FADE OUT YOUR OVERLAYING DIV
+    $('.loading').fadeOut();
+  });
+  $(document).ready(function() {
+    $('.my-datatable').DataTable({
+      autoWidth: false,
+      dom: '<"datatable-header"fl><"datatable-scroll"t><"datatable-footer"ip>',
+      language: {
+        search: '<span>Filter:</span> _INPUT_',
+        searchPlaceholder: 'Type to filter...',
+        lengthMenu: '<span>Show:</span> _MENU_',
+        paginate: { first: 'First', last: 'Last', next: '&rarr;', previous: '&larr;' },
+      },
+      drawCallback: function() {
+        $(this)
+          .find('tbody tr')
+          .slice(-3)
+          .find('.dropdown, .btn-group')
+          .addClass('dropup');
+      },
+      preDrawCallback: function() {
+        $(this)
+          .find('tbody tr')
+          .slice(-3)
+          .find('.dropdown, .btn-group')
+          .removeClass('dropup');
+      },
+    });
+  });
+  function deleteItem(url) {
+    if (confirm('Drop it?')) {
+      window.location.href = url;
+    }
+  }
+</script>
 {% endblock %}
