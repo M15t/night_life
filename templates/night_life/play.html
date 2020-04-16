@@ -12,7 +12,7 @@
                     <h4 class="no-margin">{{video.file_name}}</h4>
                     <h5 class="no-margin"><a target="blank" href="{{video.fs_url}}">{{video.fs_url}}</a></h5>
                     <video id="my-player" playsinline controls>
-                        <source src="" type="video/mp4"></source>
+                        <source src="{{ video.file_url }}" type="video/mp4"></source>
                     </video>
                     <div class="clearfix"></div>
                     <div class="col-xs-12 text-center" style="margin-top: 20px">
@@ -35,19 +35,9 @@
            $('.loading').fadeOut();
         });
         $(document).ready(function(){
-            {% if error_string %}
-                alert('{{error_string|safe}}');
-            {% endif %}
-            const player = new Plyr('#my-player');
-            player.source = {
-                type: 'video',
-                sources: [
-                    {
-                        src: '{{ video.file_url }}',
-                        type: 'video/mp4'
-                    },
-                ]
-            };
+            const player = new Plyr('#my-player', {
+                volume: 0.1,
+            });
         });
     </script>
 {% endblock %}

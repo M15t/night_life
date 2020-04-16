@@ -26,7 +26,10 @@ class FSAPI:
         self.s.headers['User-Agent'] = 'okhttp/3.6.0'
 
     def login(self):
-        config = FSConfig.objects.get(pk=1)
+        config, _ = FSConfig.objects.get_or_create(
+            app_key="L2S7R6ZMagggC5wWkQhX2+aDi467PPuftWUMRFSn")
+
+        # token="c25c79999b3bab0466158d909eaf6a7ed1cfd439", cookie="jttslg4347ivp2ch010ha34g90"
 
         data = {
             'user_email': self.email,
@@ -160,8 +163,8 @@ class FSAPI:
                 'size': file_size
             }
         )
-        print(self.token, local_path, remote_path)
-        print(r.json())
+        # print(self.token, local_path, remote_path)
+        # print(r.json())
 
         location = r.json()['location']
 

@@ -8,152 +8,152 @@ import subprocess
 from django.db import connection
 
 
-class MacAddressParser():
-    client_ip = None
+# class MacAddressParser():
+#     client_ip = None
 
-    #     client_request = None
+#     #     client_request = None
 
-    def doParseMacAddress(self, client_ip):  # , client_request):
-        ''' 
-        Detect client mac address
-        output: result, mac-address string, message if error
-        '''
-        self.client_ip = client_ip
-        #         self.client_request = client_request
+#     def doParseMacAddress(self, client_ip):  # , client_request):
+#         '''
+#         Detect client mac address
+#         output: result, mac-address string, message if error
+#         '''
+#         self.client_ip = client_ip
+#         #         self.client_request = client_request
 
-        # detect server platform
-        sys_platform = platform.system().lower()
+#         # detect server platform
+#         sys_platform = platform.system().lower()
 
-        if sys_platform == "windows":
-            return self._doParseMacAddress_Win()
-        if sys_platform == "darwin" or sys_platform == "linux":
-            return self._doParseMacAddress_Linux()
-        return False, "", "System Platform %s is not supported." % sys_platform
+#         if sys_platform == "windows":
+#             return self._doParseMacAddress_Win()
+#         if sys_platform == "darwin" or sys_platform == "linux":
+#             return self._doParseMacAddress_Linux()
+#         return False, "", "System Platform %s is not supported." % sys_platform
 
-    def _doParseMacAddress_Win(self):
-        # get the arp list
-        p1 = subprocess.Popen(
-            ['arp', '-a'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+#     def _doParseMacAddress_Win(self):
+#         # get the arp list
+#         p1 = subprocess.Popen(
+#             ['arp', '-a'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
-        out1, err1 = p1.communicate()
-        #         print "ARP:", out1
+#         out1, err1 = p1.communicate()
+#         #         print "ARP:", out1
 
-        # split arp to array
-        mac_address = ''
-        try:
-            # get the mac address from arp list
-            arp_arr = out1.split('\n')
-            for arp_info in arp_arr:
-                arr = arp_info.split()
-                if (len(arr) >= 2):
-                    #                         print arr[0], 'vs', ip, arr[0] == ip
-                    if (arr[0] == self.client_ip):
-                        mac_address = arr[1]
-                        break
+#         # split arp to array
+#         mac_address = ''
+#         try:
+#             # get the mac address from arp list
+#             arp_arr = out1.split('\n')
+#             for arp_info in arp_arr:
+#                 arr = arp_info.split()
+#                 if (len(arr) >= 2):
+#                     #                         print arr[0], 'vs', ip, arr[0] == ip
+#                     if (arr[0] == self.client_ip):
+#                         mac_address = arr[1]
+#                         break
 
-            return True, mac_address, ''
-        except Exception, ex:
-            return False, '', "PrintMacAddressAndIpMiddleware. Can not split arp: %s" % ex
+#             return True, mac_address, ''
+#         except Exception, ex:
+#             return False, '', "PrintMacAddressAndIpMiddleware. Can not split arp: %s" % ex
 
-    def _doParseMacAddress_Linux(self):
-        # get the arp list
-        p1 = subprocess.Popen(
-            ['arp', '-a'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+#     def _doParseMacAddress_Linux(self):
+#         # get the arp list
+#         p1 = subprocess.Popen(
+#             ['arp', '-a'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
-        out1, err1 = p1.communicate()
-        #         print "ARP:", out1
-        #         ? (169.254.38.115) at 60:f8:1d:c0:f2:e on en0 [ethernet]
-        #         ? (169.254.130.195) at 60:f8:1d:c0:f2:e on en0 [ethernet]
-        #         ? (169.254.203.142) at 70:f1:a1:ab:a9:38 on en0 [ethernet]
-        #         ? (192.168.2.1) at 0:d0:cb:0:0:5 on en0 ifscope [ethernet]
-        #         ? (192.168.2.101) at 60:f8:1d:c0:f2:e on en0 ifscope [ethernet]
+#         out1, err1 = p1.communicate()
+#         #         print "ARP:", out1
+#         #         ? (169.254.38.115) at 60:f8:1d:c0:f2:e on en0 [ethernet]
+#         #         ? (169.254.130.195) at 60:f8:1d:c0:f2:e on en0 [ethernet]
+#         #         ? (169.254.203.142) at 70:f1:a1:ab:a9:38 on en0 [ethernet]
+#         #         ? (192.168.2.1) at 0:d0:cb:0:0:5 on en0 ifscope [ethernet]
+#         #         ? (192.168.2.101) at 60:f8:1d:c0:f2:e on en0 ifscope [ethernet]
 
-        # split arp to array
+#         # split arp to array
 
-        mac_address = ''
-        try:
-            # get the mac address from arp list
-            arp_arr = out1.split('\n')
-            for arp_info in arp_arr:
-                arr = arp_info.split()
-                if (len(arr) >= 4):
-                    if (arr[1].find(self.client_ip) != -1):
-                        mac_address = arr[3]
-                        break
+#         mac_address = ''
+#         try:
+#             # get the mac address from arp list
+#             arp_arr = out1.split('\n')
+#             for arp_info in arp_arr:
+#                 arr = arp_info.split()
+#                 if (len(arr) >= 4):
+#                     if (arr[1].find(self.client_ip) != -1):
+#                         mac_address = arr[3]
+#                         break
 
-            return True, mac_address, ''
-        except Exception, ex:
-            return False, '', "PrintMacAddressAndIpMiddleware. Can not split arp: %s" % ex
-        return False, '', "Not supports"
-
-
-def get_client_ip(request):
-    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
-    if x_forwarded_for:
-        ip = x_forwarded_for.split(',')[0]
-    else:
-        ip = request.META.get('REMOTE_ADDR')
-    return ip
+#             return True, mac_address, ''
+#         except Exception, ex:
+#             return False, '', "PrintMacAddressAndIpMiddleware. Can not split arp: %s" % ex
+#         return False, '', "Not supports"
 
 
-def check_ping(hostname):
-    response = os.system(
-        "ping " + ("-n 1 " if platform.system().lower() == "windows" else "-c 1 ") + hostname)
-    #     print response
-    # and then check the response...
-    if response == 0:
-        return True
-    return False
+# def get_client_ip(request):
+#     x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+#     if x_forwarded_for:
+#         ip = x_forwarded_for.split(',')[0]
+#     else:
+#         ip = request.META.get('REMOTE_ADDR')
+#     return ip
 
 
-class PrintMacAddressAndIpMiddleware(object):
-    """
-    This middleware will log Mac Address using subprocess module on Linux OS.
-    The idea is to use system command to ping remote device IP and get the MAC address from system ARP list.
-             STILL BUGGGGGG
-    """
+# def check_ping(hostname):
+#     response = os.system(
+#         "ping " + ("-n 1 " if platform.system().lower() == "windows" else "-c 1 ") + hostname)
+#     #     print response
+#     # and then check the response...
+#     if response == 0:
+#         return True
+#     return False
 
-    def __init__(self, get_response):
-        self.get_response = get_response
 
-    def __call__(self, request):
-        # don't try to parse mac address averytime
-        if hasattr(request, 'RPI_PHYSICAL') and request.RPI_PHYSICAL.get("MAC_ADDRESS", '') != '':
-            return
+# class PrintMacAddressAndIpMiddleware(object):
+#     """
+#     This middleware will log Mac Address using subprocess module on Linux OS.
+#     The idea is to use system command to ping remote device IP and get the MAC address from system ARP list.
+#              STILL BUGGGGGG
+#     """
 
-        try:
-            client_ip = get_client_ip(request)
+#     def __init__(self, get_response):
+#         self.get_response = get_response
 
-            parser = MacAddressParser()
-            result, mac_address, msg = parser.doParseMacAddress(client_ip)
+#     def __call__(self, request):
+#         # don't try to parse mac address averytime
+#         if hasattr(request, 'RPI_PHYSICAL') and request.RPI_PHYSICAL.get("MAC_ADDRESS", '') != '':
+#             return
 
-            if not result:
-                print "Process get mac fail:", msg
-            # now append data to request
+#         try:
+#             client_ip = get_client_ip(request)
 
-            data = {
-                'IP': client_ip,
-                'MAC_ADDRESS': mac_address,
-                "PLATFORM": platform.system(),
+#             parser = MacAddressParser()
+#             result, mac_address, msg = parser.doParseMacAddress(client_ip)
 
-                # extra info
-                "HTTP_HOST": request.META.get("HTTP_HOST", ''),
-                "COMPUTERNAME": request.META.get("COMPUTERNAME", ''),
-                "USERDOMAIN": request.META.get("USERDOMAIN", ''),
-                "HTTP_ACCEPT": request.META.get("HTTP_ACCEPT", ''),
-                "HTTP_USER_AGENT": request.META.get("HTTP_USER_AGENT", ''),
-                "NUMBER_OF_PROCESSORS": request.META.get("NUMBER_OF_PROCESSORS", ''),
-                "PATH_INFO": request.META.get("PATH_INFO", '')
+#             if not result:
+#                 print "Process get mac fail:", msg
+#             # now append data to request
 
-            }
-            request.RPI_PHYSICAL = data
+#             data = {
+#                 'IP': client_ip,
+#                 'MAC_ADDRESS': mac_address,
+#                 "PLATFORM": platform.system(),
 
-        except Exception, ex:
-            print "PrintMacAddressAndIpMiddleware:", ex
+#                 # extra info
+#                 "HTTP_HOST": request.META.get("HTTP_HOST", ''),
+#                 "COMPUTERNAME": request.META.get("COMPUTERNAME", ''),
+#                 "USERDOMAIN": request.META.get("USERDOMAIN", ''),
+#                 "HTTP_ACCEPT": request.META.get("HTTP_ACCEPT", ''),
+#                 "HTTP_USER_AGENT": request.META.get("HTTP_USER_AGENT", ''),
+#                 "NUMBER_OF_PROCESSORS": request.META.get("NUMBER_OF_PROCESSORS", ''),
+#                 "PATH_INFO": request.META.get("PATH_INFO", '')
 
-        response = self.get_response(request)
+#             }
+#             request.RPI_PHYSICAL = data
 
-        return response
+#         except Exception, ex:
+#             print "PrintMacAddressAndIpMiddleware:", ex
+
+#         response = self.get_response(request)
+
+#         return response
 
 
 class QueryCountDebugMiddleware(object):
