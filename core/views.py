@@ -97,6 +97,6 @@ def remove(request, video_id):
 
 
 def test(request):
-    leak_video("https://www.fshare.vn/file/9JQQ9QOW73HY")
-    # leak_folder("https://www.fshare.vn/folder/AT2HY4EGQ1P5")
+    leak_video("https://www.fshare.vn/file/TAPDJBLT4P2U")
+    # leak_folder("https://www.fshare.vn/folder/JL4GOTQYBG1H")
     return HttpResponse("Testing..")
