@@ -1,5 +1,5 @@
 django==1.11.29
-lxml==4.3.2
+lxml==4.6.2
 hyper==0.7.0
 requests==2.21.0
 PyMySQL==0.9.3
