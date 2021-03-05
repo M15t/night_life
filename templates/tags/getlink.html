@@ -5,9 +5,8 @@
       {% if not video.file_name %} Paste your link Fshare to the right ========> {% else %}
       {{ video.file_name }}
       {% endif %} {% if not error %}
-      <small class="display-block text-primary"
-        ><a href="{{ video.fs_url }}" target="_blank">{{ video.fs_url }}</a></small
-      >
+      <small class="display-block text-primary"><a href="{{ video.fs_url }}"
+          target="_blank">{{ video.fs_url }}</a></small>
       {% endif %}
     </h6>
     <div class="heading-elements">
@@ -35,16 +34,20 @@
         url: $('#url').val(),
       },
       dataType: 'json',
-      success: function(response) {
+      success: function (response) {
         $('.loading').fadeOut();
         if (response.error_string != "") {
           alert(response.error_string);
-        } 
+        }
         if (response.code != "") {
           var url = "{% url 'core_views_play' 6969 %}".replace(6969, response.code);
-				  window.location.href = url;
+          window.location.href = url;
         }
       },
+      error: function () {
+        $('.loading').fadeOut();
+        alert("Error! Please try another file");
+      }
     });
   }
 </script>

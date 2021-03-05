@@ -58,6 +58,8 @@ class FSAPI:
 
             response = conn.get_response(login_request)
 
+            print "=====", response.read().decode('utf-8')
+
             login_data = json.loads(response.read().decode('utf-8'))
 
             config.token = login_data['token']
@@ -133,6 +135,7 @@ class FSAPI:
                 'url': url,
             }
         )
+        print "response ======== ", r
         return r.json()
 
     def upload(self, local_path, remote_path, secured=1):
