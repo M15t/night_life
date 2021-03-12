@@ -27,19 +27,17 @@ class FSAPI:
 
     def login(self):
         config, _ = FSConfig.objects.get_or_create(
-            app_key="L2S7R6ZMagggC5wWkQhX2+aDi467PPuftWUMRFSn")
+            app_key="dMnqMMZMUnN5YpvKENaEhdQQ5jxDqddt")
 
-        # token="c25c79999b3bab0466158d909eaf6a7ed1cfd439", cookie="jttslg4347ivp2ch010ha34g90"
+        self.token = config.token
+        cookie = config.cookie
+        self.s.cookies.set('session_id', cookie)
 
         data = {
             'user_email': self.email,
             'password': self.password,
             'app_key': config.app_key,
         }
-
-        self.token = config.token
-        cookie = config.cookie
-        self.s.cookies.set('session_id', cookie)
 
         # call a test
         r = self.s.post(
@@ -51,16 +49,19 @@ class FSAPI:
         )
 
         if r.status_code != 200:
-            conn = HTTPConnection('api.fshare.vn:443')
+            url = "https://api.fshare.vn/api/user/login"
 
-            login_request = conn.request(
-                'POST', '/api/user/login/', body=json.dumps(data))
+            payload = "{\n\t\"user_email\" : \"+ self.email +\",\n\t\"password\":\t\"Tmrisdoomday!2\",\n\t\"app_key\" : \"dMnqMMZMUnN5YpvKENaEhdQQ5jxDqddt\"\n}"
+            headers = {
+                'Content-Type': 'application/json',
+                'User-Agent': 'checkAPI-UT42RX',
+                'Cookie': 'session_id=he6iiesop1ht3q2val4u74edor'
+            }
 
-            response = conn.get_response(login_request)
+            response = requests.request(
+                "POST", url, headers=headers, data=payload)
 
-            print "=====", response.read().decode('utf-8')
-
-            login_data = json.loads(response.read().decode('utf-8'))
+            login_data = response.json()
 
             config.token = login_data['token']
             config.cookie = login_data['session_id']

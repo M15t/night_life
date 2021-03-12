@@ -18,7 +18,7 @@ from .functions import *
 TEMPLATE_PATH = 'night_life/'
 
 MY_ID = 'trees1411@yahoo.com'
-MY_PWD = 'H!d3someone!2'
+MY_PWD = 'Tmrisdoomday!2'
 global account
 account = FSAPI(email=MY_ID, password=MY_PWD)
 
