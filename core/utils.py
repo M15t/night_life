@@ -27,11 +27,9 @@ class FSAPI:
 
     def login(self):
         config, _ = FSConfig.objects.get_or_create(
-            app_key="dMnqMMZMUnN5YpvKENaEhdQQ5jxDqddt")
+            app_key="L2S7R6ZMagggC5wWkQhX2+aDi467PPuftWUMRFSn")
 
-        self.token = config.token
-        cookie = config.cookie
-        self.s.cookies.set('session_id', cookie)
+        # token="c25c79999b3bab0466158d909eaf6a7ed1cfd439", cookie="jttslg4347ivp2ch010ha34g90"
 
         data = {
             'user_email': self.email,
@@ -58,10 +56,14 @@ class FSAPI:
                 'Cookie': 'session_id=he6iiesop1ht3q2val4u74edor'
             }
 
-            response = requests.request(
-                "POST", url, headers=headers, data=payload)
+            conn = HTTPConnection('api.fshare.vn:443')
 
-            login_data = response.json()
+            login_request = conn.request(
+                'POST', '/api/user/login/', body=json.dumps(data))
+
+            response = conn.get_response(login_request)
+
+            login_data = json.loads(response.read().decode('utf-8'))
 
             config.token = login_data['token']
             config.cookie = login_data['session_id']
@@ -136,7 +138,6 @@ class FSAPI:
                 'url': url,
             }
         )
-        print "response ======== ", r
         return r.json()
 
     def upload(self, local_path, remote_path, secured=1):
